@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Autograder embargo",
+      "setup": "",
+      "run": "echo \"The autograder is going to be embargoed for a week. During that time, you should be testing your code locally (you should be doing that anyway). The instructions for that are in the last section in the assignment README file. Those will be the basis for what the autograder does to test your code. If your code responds as expected in local tests, then it will pass the autograder.\"",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 10,
+      "points": null
+    }
+  ]
+}
