@@ -85,7 +85,7 @@
       "setup": "npm link",
       "run": "galosh.js -j",
       "input": "",
-      "output": "error: true,",
+      "output": "Latitude must be in range",
       "comparison": "included",
       "timeout": 10,
       "points": 5000
