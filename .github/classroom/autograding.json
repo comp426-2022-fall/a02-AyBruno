@@ -105,7 +105,7 @@
       "setup": "",
       "run": "cat package.json",
       "input": "",
-      "output": "AGPL-3.0",
+      "output": "GPL-3.0",
       "comparison": "included",
       "timeout": 10,
       "points": 5000
