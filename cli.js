@@ -27,18 +27,18 @@ function dump(msg){
 }
 
 async function main(){
+    //list of options used for checking invalid options
     const options = ["_", "h", "n", "s", "w", "e", "z", "d", 'j'];
     const argv = minimist(process.argv.slice(2));
 
-    const timezone = moment.tz.guess();
+    const timezone = moment.tz.guess(); //set timezone by default
     const verbose = argv['v'];
     const showJSON = argv['j'];
 
     //check for invalid options
     for(const key in argv){
         if(!options.includes(key)){
-            console.log(`Invalid option: ${key}`);
-            return 1;
+            dump(`Invalid option: ${key}`);
         }
     }
 
@@ -48,7 +48,7 @@ async function main(){
         return 0;
     }
 
-    //set user timezone
+    //set user specified timezone
     if(argv['t']){
         timezone = argv['t'];
     }
@@ -82,22 +82,26 @@ async function main(){
     if(!argv['s'] && !argv['n']){
         dump("LATITUDE must be included");
     }
+    
+    //ensure lat and lon are only difined to 2 decimal places
+    latitude = Math.round(latitude*100)/100;
+    longitude = Math.round(longitude*100)/100;
 
-    console.log(longitude);
-    console.log(latitude);
+   // console.log(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
+   //                                                            `&longitude=${longitude}`+
+   //                                                            `&${query_params}`+
+   //                                                            `&timezone=${timezone}`);
 
-//    console.log(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
-//                                                               `&longitude=${longitude}`+
-//                                                               `&${query_params}`+
-//                                                               `&timezone=${timezone}`);
-
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
-                                                               `&longitude=${longitude}`+
+    //query the api
+    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}`+
+                                                               `&longitude=${longitude.toFixed(2)}`+
                                                                `&${query_params}`+
                                                                `&timezone=${timezone}`);
 
+    //parse response json
     const data = await response.json(); 
-     
+    
+    //output json
     if(argv['j']){
         console.log(data);
         return 0;
@@ -105,14 +109,18 @@ async function main(){
 
     let days = argv['d'];
 
+    //in case days is left undefined by the user, or the user specifies day out
+    //of bounds
     if(days == undefined){
         days = 0;
     } else if(days > 6){
         dump("Must request weather within the week");
     }
     
-    console.log(days);
-    console.log(data.daily.precipitation_sum[days]);
+    //console.log(days);
+    //console.log(data.daily.precipitation_sum[days]);
+    
+    //default output logic
     if(data.daily.precipitation_sum[days] > 0){
         process.stdout.write("You might need galoshes ");
     } else{
