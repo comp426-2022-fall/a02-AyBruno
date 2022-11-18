@@ -31,7 +31,7 @@ async function main(){
     const options = ["_", "h", "n", "s", "w", "e", "z", "d", 'j'];
     const argv = minimist(process.argv.slice(2));
 
-    const timezone = moment.tz.guess(); //set timezone by default
+    let timezone = moment.tz.guess(); //set timezone by default
     const verbose = argv['v'];
     const showJSON = argv['j'];
 
@@ -49,8 +49,8 @@ async function main(){
     }
 
     //set user specified timezone
-    if(argv['t']){
-        timezone = argv['t'];
+    if(argv['z']){
+        timezone = argv['z'];
     }
     
     //get longitude data from command line args
