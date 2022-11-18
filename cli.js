@@ -65,7 +65,8 @@ async function main(){
         longitude = argv['e'];
     }
     if(!argv['e'] && !argv['w']){
-        dump("LONGITUDE must be included");
+        console.log("Longitude must be in range");
+        return 1;
     }
 
     //Get latitude data from command line args
@@ -80,7 +81,8 @@ async function main(){
         latitude = argv['n'];
     }
     if(!argv['s'] && !argv['n']){
-        dump("LATITUDE must be included");
+        console.log("Latitude must be in range");
+        return 1
     }
     
     //ensure lat and lon are only difined to 2 decimal places
@@ -110,7 +112,9 @@ async function main(){
     let days = argv['d'];
 
     //checks if user specified days is out of bounds
-    if(days > 6){
+    if(days == undefined){
+        days = 1;
+    }else if(days > 6){
         dump("Must request weather within the week");
     }
     
@@ -118,7 +122,7 @@ async function main(){
     //console.log(data.daily.precipitation_sum[days]);
     
     //default output logic
-    if(data.daily.precipitation_sum[days] > 0){
+    if(data.daily.precipitation_hours[days] > 0){
         process.stdout.write("You might need galoshes ");
     } else{
         process.stdout.write("You will not need your galoshes ");
