@@ -19,6 +19,7 @@ function showhelp(){
     console.log("\t-z            Time zone: uses tz.guess() from moment-timezone by default.");
     console.log("\t-d 0-6        Day to retrieve weather: 0 is today; defaults to 1.");
     console.log("\t-j            Echo pretty JSON from open-meteo API and exit.");
+    return 0;
 }
 
 function dump(msg){
@@ -45,7 +46,6 @@ async function main(){
     //show the hellp message if requested and exit
     if(argv['h']){ 
         showhelp();
-        return 0;
     }
 
     //set user specified timezone
@@ -109,11 +109,8 @@ async function main(){
 
     let days = argv['d'];
 
-    //in case days is left undefined by the user, or the user specifies day out
-    //of bounds
-    if(days == undefined){
-        days = 0;
-    } else if(days > 6){
+    //checks if user specified days is out of bounds
+    if(days > 6){
         dump("Must request weather within the week");
     }
     
