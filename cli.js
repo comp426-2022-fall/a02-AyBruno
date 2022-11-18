@@ -3,6 +3,14 @@ import minimist from 'minimist';
 import fetch from 'node-fetch';
 import moment from 'moment-timezone';
 
+const query_params = "daily=temperature_2m_max,temperature_2m_min,"+
+                            "sunrise,sunset,precipitation_sum,precipitation_hours,"+
+                            "windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant"+
+                            "&current_weather=true"+
+                            "&temperature_unit=fahrenheit"+
+                            "&windspeed_unit=mph"+
+                            "&precipitation_unit=inch";
+
 function showhelp(){
     console.log(" Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE");
     console.log("\t-h            Show this help message and exit.");
@@ -13,7 +21,9 @@ function showhelp(){
     console.log("\t-j            Echo pretty JSON from open-meteo API and exit.");
 }
 
-function getData(){
+function dump(msg){
+    console.log(`ERROR: ${msg}`);
+    return 1;
 }
 
 async function main(){
@@ -37,64 +47,86 @@ async function main(){
         showhelp();
         return 0;
     }
+
+    //set user timezone
+    if(argv['t']){
+        timezone = argv['t'];
+    }
     
     //get longitude data from command line args
     let longitude = 0;
     if(argv['w']){
         longitude = -1*argv['w']; 
     }        
-    else if(argv['e']){
+    if(argv['e']){
         if(longitude){
-            console.log("Cannot specify LONGITUDE twice");
-            return 1;
+            dump("Cannot specify LONGITUDE twice");
         }
         longitude = argv['e'];
     }
-    else{
-        console.log("LONGITUDE must be included");
-        return 1;
+    if(!argv['e'] && !argv['w']){
+        dump("LONGITUDE must be included");
     }
 
     //Get latitude data from command line args
     let latitude = 0;
     if(argv['s']){
-        latitude = -1*argv['w']; 
+        latitude = -1*argv['s']; 
     }        
-    else if(argv['n']){
+    if(argv['n']){
         if(latitude){
-            console.log("Cannot specify LATITUDE twice");
-            return 1;
+            dump("Cannot specify LATITUDE twice");
         }
         latitude = argv['n'];
     }
-    else{
-        console.log("LATITUDE must be included");
-        return 1;
+    if(!argv['s'] && !argv['n']){
+        dump("LATITUDE must be included");
     }
 
     console.log(longitude);
     console.log(latitude);
-    const query_params = "daily=temperature_2m_max,temperature_2m_min,"+
-                                "sunrise,sunset,precipitation_sum,precipitation_hours,"+
-                                "windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant"+
-                                "&current_weather=true"+
-                                "&temperature_unit=fahrenheit"+
-                                "&windspeed_unit=mph"+
-                                "&precipitation_unit=inch";
+
+//    console.log(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
+//                                                               `&longitude=${longitude}`+
+//                                                               `&${query_params}`+
+//                                                               `&timezone=${timezone}`);
 
     const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
                                                                `&longitude=${longitude}`+
                                                                `&${query_params}`+
                                                                `&timezone=${timezone}`);
 
-    console.log(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}`+
-                                                               `&longitude=${longitude}`+
-                                                               `&${query_params}`+
-                                                               `&timezone=${timezone}`);
-
     const data = await response.json(); 
+     
+    if(argv['j']){
+        console.log(data);
+        return 0;
+    }
 
-    console.log(data);
+    let days = argv['d'];
+
+    if(days == undefined){
+        days = 0;
+    } else if(days > 6){
+        dump("Must request weather within the week");
+    }
+    
+    console.log(days);
+    console.log(data.daily.precipitation_sum[days]);
+    if(data.daily.precipitation_sum[days] > 0){
+        process.stdout.write("You might need galoshes ");
+    } else{
+        process.stdout.write("You will not need your galoshes ");
+    }
+
+    if(days == 0){
+        console.log("today.");
+    } else if(days > 1){
+        console.log(`in &{days} days`);
+    } else{
+        console.log("tomorrow.");
+    }
+
 }
 
 main();
