@@ -28,7 +28,7 @@ function dump(msg){
 
 async function main(){
     //list of options used for checking invalid options
-    const options = ["_", "h", "n", "s", "w", "e", "z", "d", 'j'];
+    const options = ["_", "h", "n", "s", "w", "e", "t", "d", 'j'];
     const argv = minimist(process.argv.slice(2));
 
     let timezone = moment.tz.guess(); //set timezone by default
@@ -49,8 +49,8 @@ async function main(){
     }
 
     //set user specified timezone
-    if(argv['z']){
-        timezone = argv['z'];
+    if(argv['t']){
+        timezone = argv['t'];
     }
     
     //get longitude data from command line args
