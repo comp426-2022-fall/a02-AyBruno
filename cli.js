@@ -19,7 +19,6 @@ function showhelp(){
     console.log("\t-z            Time zone: uses tz.guess() from moment-timezone by default.");
     console.log("\t-d 0-6        Day to retrieve weather: 0 is today; defaults to 1.");
     console.log("\t-j            Echo pretty JSON from open-meteo API and exit.");
-    return 0;
 }
 
 
@@ -43,6 +42,7 @@ async function main(){
     //show the hellp message if requested and exit
     if(argv['h']){ 
         showhelp();
+        return 0;
     }
 
     //set user specified timezone
