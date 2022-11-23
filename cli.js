@@ -22,10 +22,6 @@ function showhelp(){
     return 0;
 }
 
-function dump(msg){
-    console.log(`ERROR: ${msg}`);
-    return 1;
-}
 
 async function main(){
     //list of options used for checking invalid options
@@ -39,7 +35,8 @@ async function main(){
     //check for invalid options
     for(const key in argv){
         if(!options.includes(key)){
-            dump(`Invalid option: ${key}`);
+            console.log(`Invalid option: ${key}`);
+            return 1;
         }
     }
 
@@ -60,11 +57,16 @@ async function main(){
     }        
     if(argv['e']){
         if(longitude){
-            dump("Cannot specify LONGITUDE twice");
+            console.log("Cannot specify Longitude twice");
+            return 1;
         }
         longitude = argv['e'];
     }
     if(!argv['e'] && !argv['w']){
+        console.log("Longitude must be included");
+        return 1;
+    }
+    if(longitude > 90 || longitude < -90){
         console.log("Longitude must be in range");
         return 1;
     }
@@ -76,13 +78,18 @@ async function main(){
     }        
     if(argv['n']){
         if(latitude){
-            dump("Cannot specify LATITUDE twice");
+            console.log("Cannot specify LATITUDE twice");
+            return 1;
         }
         latitude = argv['n'];
     }
     if(!argv['s'] && !argv['n']){
-        console.log("Latitude must be in range");
+        console.log("Latitude must be included");
         return 1
+    }
+    if(latitude > 90 ||  latitude < -90){
+        console.log("Latitude must be in range");
+        return 1;
     }
     
     //ensure lat and lon are only difined to 2 decimal places
