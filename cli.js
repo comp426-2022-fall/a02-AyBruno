@@ -51,43 +51,35 @@ async function main(){
     }
     
     //Get latitude data from command line args
-    let latitude = 0;
+    let latitude = -100;
+    if(argv['s'] && argv['n']){
+        console.log("Cannot specify Latitude twice");
+        return 1;
+    }
     if(argv['s']){
         latitude = -1*argv['s']; 
     }        
-    if(argv['n']){
-        if(latitude){
-            console.log("Cannot specify LATITUDE twice");
-            return 1;
-        }
+    else if(argv['n']){
         latitude = argv['n'];
     }
-//    if(!argv['s'] && !argv['n']){
-//        console.log("Latitude must be included");
-//        return 1
-//    }
     if(latitude > 90 ||  latitude < -90){
         console.log("Latitude must be in range");
         return 1;
     }
 
     //get longitude data from command line args
-    let longitude = 0;
-    if(argv['w']){
-        longitude = -1*argv['w']; 
-    }        
-    if(argv['e']){
-        if(longitude){
-            console.log("Cannot specify Longitude twice");
-            return 1;
-        }
-        longitude = argv['e'];
+    let longitude = -100;
+    if(argv['s'] && argv['n']){
+        console.log("Cannot specify Longitude twice");
+        return 1;
     }
-//    if(!argv['e'] && !argv['w']){
-//        console.log("Longitude must be included");
-//        return 1;
-//    }
-    if(longitude > 90 || longitude < -90){
+    if(argv['s']){
+        longitude = -1*argv['s']; 
+    }        
+    else if(argv['n']){
+        longitude = argv['n'];
+    }
+    if(longitude > 90 ||  longitude < -90){
         console.log("Longitude must be in range");
         return 1;
     }
