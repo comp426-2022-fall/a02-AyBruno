@@ -62,10 +62,10 @@ async function main(){
         }
         latitude = argv['n'];
     }
-    if(!argv['s'] && !argv['n']){
-        console.log("Latitude must be included");
-        return 1
-    }
+//    if(!argv['s'] && !argv['n']){
+//        console.log("Latitude must be included");
+//        return 1
+//    }
     if(latitude > 90 ||  latitude < -90){
         console.log("Latitude must be in range");
         return 1;
@@ -83,10 +83,10 @@ async function main(){
         }
         longitude = argv['e'];
     }
-    if(!argv['e'] && !argv['w']){
-        console.log("Longitude must be included");
-        return 1;
-    }
+//    if(!argv['e'] && !argv['w']){
+//        console.log("Longitude must be included");
+//        return 1;
+//    }
     if(longitude > 90 || longitude < -90){
         console.log("Longitude must be in range");
         return 1;
