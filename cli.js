@@ -50,27 +50,6 @@ async function main(){
         timezone = argv['t'];
     }
     
-    //get longitude data from command line args
-    let longitude = 0;
-    if(argv['w']){
-        longitude = -1*argv['w']; 
-    }        
-    if(argv['e']){
-        if(longitude){
-            console.log("Cannot specify Longitude twice");
-            return 1;
-        }
-        longitude = argv['e'];
-    }
-    if(!argv['e'] && !argv['w']){
-        console.log("Longitude must be included");
-        return 1;
-    }
-    if(longitude > 90 || longitude < -90){
-        console.log("Longitude must be in range");
-        return 1;
-    }
-
     //Get latitude data from command line args
     let latitude = 0;
     if(argv['s']){
@@ -89,6 +68,27 @@ async function main(){
     }
     if(latitude > 90 ||  latitude < -90){
         console.log("Latitude must be in range");
+        return 1;
+    }
+
+    //get longitude data from command line args
+    let longitude = 0;
+    if(argv['w']){
+        longitude = -1*argv['w']; 
+    }        
+    if(argv['e']){
+        if(longitude){
+            console.log("Cannot specify Longitude twice");
+            return 1;
+        }
+        longitude = argv['e'];
+    }
+    if(!argv['e'] && !argv['w']){
+        console.log("Longitude must be included");
+        return 1;
+    }
+    if(longitude > 90 || longitude < -90){
+        console.log("Longitude must be in range");
         return 1;
     }
     
